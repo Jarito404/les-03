@@ -3,6 +3,14 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# SSH sleutels en gevoelige bestanden
+*.pem
+*.key
+*.crt
+*.pub
+*.id_rsa
+*.id_ed25519
+
 # C extensions
 *.so
 
