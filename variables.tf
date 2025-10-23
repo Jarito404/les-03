@@ -19,5 +19,5 @@ variable "esxi_password" {
 }
 
 variable "ssh_pub_key_path" {
-  default     = "/id_ed25519.pub"
+  default     = "~/.ssh/id_ed25519.pub"
 }

@@ -27,7 +27,7 @@ resource "esxi_guest" "demoapp" {
   numvcpus           = "1"
   power              = "on"
 
-  clone_from_vm = "base-ubuntu"
+  clone_from_vm = "ubuntu64"
 
   network_interfaces {
     virtual_network = "VM Network"
