@@ -15,16 +15,17 @@ provider "esxi" {
   esxi_password = var.esxi_password
 }
 
-resource "esxi_guest" "ubuntu_vm" {
+resource "esxi_guest" "demoapp" {
   guest_name = "demoapp"
   disk_store = "datastore1"
   guestos    = "ubuntu-64"
 
   boot_disk_type = "thin"
   boot_disk_size = "15"
-  memsize        = "2048"
-  numvcpus       = "1"
-  power          = "on"
+
+  memsize            = "2048"
+  numvcpus           = "1"
+  power              = "on"
 
   clone_from_vm = "base-ubuntu"
 
@@ -32,19 +33,21 @@ resource "esxi_guest" "ubuntu_vm" {
     virtual_network = "VM Network"
   }
 
-  guest_startup_timeout = 45
+  guest_startup_timeout  = 45
+  guest_shutdown_timeout = 30
 }
 
 # SSH key toevoegen
 locals {
   pubkey_raw = trimspace(file(var.ssh_pub_key_path))
+  cloudinit  = replace(file("${path.module}/cloudinit.yml"), "PLACEHOLDER_PUBKEY", local.pubkey_raw)
 }
 
 # Genereer automatisch inventory
 data "template_file" "ansible_inventory" {
   template = file("${path.module}/inventory.tpl")
   vars = {
-    vm_ip    = esxi_guest.ubuntu_vm.ip_address
+    vm_ip    = esxi_guest.demoapp.ip_address
     app_name = "demoapp"
   }
 }
@@ -55,6 +58,6 @@ resource "local_file" "inventory" {
 }
 
 output "vm_ip" {
-  value = esxi_guest.ubuntu_vm.ip_address
+  value = esxi_guest.demoapp.ip_address
 }
 
